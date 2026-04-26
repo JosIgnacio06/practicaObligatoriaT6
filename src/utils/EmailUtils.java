@@ -1,45 +1,95 @@
 package utils;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+
+import modelos.Producto;
+import modelos.Trato;
+import modelos.Usuario;
+
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
+import java.io.File;
 import java.util.Properties;
 
+// UTILIDAD: Gestión del envío de emails.
+// Devuelve boolean para que la capa que llame decida qué mostrar al usuario.
 public class EmailUtils {
-    // Cambia estos datos por los de tu cuenta de Gmail
     private static final String REMITENTE = "nachescalpro@gmail.com";
-    private static final String CLAVE = "ysep wwzd ygkk gafx"; // Usa clave de app de Gmail
+    private static final String CLAVE     = "ysep wwzd ygkk gafx";
 
-    public static void enviarEmail(String destinatario, String asunto, String cuerpo) {
-
-        // Configuración del servidor SMTP de Gmail
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-
-        Session session = Session.getInstance(props);
-
+    /**
+     * Envía un email de texto plano.
+     * @return true si el envío fue correcto, false si hubo algún error.
+     */
+    public static boolean enviarEmail(String destinatario, String asunto, String cuerpo) {
         try {
+            Session session = crearSession();
             MimeMessage mensaje = new MimeMessage(session);
             mensaje.setFrom(new InternetAddress(REMITENTE));
             mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
-            mensaje.setSubject(asunto);
-            mensaje.setText(cuerpo); // Texto plano
+            mensaje.setSubject(asunto, "UTF-8");
+            mensaje.setText(cuerpo, "UTF-8");
 
             Transport transport = session.getTransport("smtp");
             transport.connect(REMITENTE, CLAVE);
             transport.sendMessage(mensaje, mensaje.getAllRecipients());
             transport.close();
-
-            System.out.println("Correo enviado correctamente a " + destinatario);
-
+            return true;
         } catch (MessagingException e) {
-            System.out.println("Error al enviar el correo a " + destinatario);
-            e.printStackTrace();
+            return false;
         }
+    }
+
+    /**
+     * Envía un email con un fichero PDF adjunto.
+     * @return true si el envío fue correcto.
+     */
+    public static boolean enviarEmailConPDF(String destinatario, String asunto,
+                                            String cuerpo, File adjuntoPDF) {
+        try {
+            Session session = crearSession();
+            MimeMessage mensaje = new MimeMessage(session);
+            mensaje.setFrom(new InternetAddress(REMITENTE));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
+            mensaje.setSubject(asunto, "UTF-8");
+
+            // Parte de texto
+            MimeBodyPart textoParte = new MimeBodyPart();
+            textoParte.setText(cuerpo, "UTF-8");
+
+            // Parte del adjunto
+            MimeBodyPart adjuntoParte = new MimeBodyPart();
+            adjuntoParte.attachFile(adjuntoPDF);
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(textoParte);
+            multipart.addBodyPart(adjuntoParte);
+            mensaje.setContent(multipart);
+
+            Transport transport = session.getTransport("smtp");
+            transport.connect(REMITENTE, CLAVE);
+            transport.sendMessage(mensaje, mensaje.getAllRecipients());
+            transport.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Envía un email con un fichero Excel adjunto.
+     */
+    public static boolean enviarEmailConExcel(String destinatario, String asunto,
+                                               String cuerpo, File adjuntoExcel) {
+        return enviarEmailConPDF(destinatario, asunto, cuerpo, adjuntoExcel); // mismo mecanismo
+    }
+
+    // -------------------------------------------------------------------------
+    private static Session crearSession() {
+        Properties props = new Properties();
+        props.put("mail.smtp.host",             "smtp.gmail.com");
+        props.put("mail.smtp.port",             "587");
+        props.put("mail.smtp.auth",             "true");
+        props.put("mail.smtp.starttls.enable",  "true");
+        return Session.getInstance(props);
     }
 }
