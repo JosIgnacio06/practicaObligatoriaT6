@@ -57,11 +57,11 @@ Al iniciar la aplicación, el usuario accede a un menú de navegación global si
 
 **1. Buscar Productos:** Permite consultar todo el catálogo de artículos disponibles en la plataforma, o también por el ID o el nombre del artículo.
 
-<img width="366" height="194" alt="image" src="https://github.com/user-attachments/assets/e0753efc-6c1a-4be1-b16b-82292dd29cf2" />
+<img width="392" height="189" alt="image" src="https://github.com/user-attachments/assets/302d0182-d488-4d43-b1f9-989f89988975" />
 
 **2. Iniciar sesión:** Acceso mediante credenciales (Email y Contraseña) para usuarios ya registrados.
 
-<img width="465" height="194" alt="image" src="https://github.com/user-attachments/assets/b1480a28-3c2f-41be-9c11-5751537ff435" />
+<img width="305" height="238" alt="image" src="https://github.com/user-attachments/assets/816b56d0-bee0-46f1-87ef-f49041acc707" />
 
 **3. Registrarse:** Formulario de creación de cuenta para nuevos miembros.
 
