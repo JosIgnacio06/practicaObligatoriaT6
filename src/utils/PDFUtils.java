@@ -7,24 +7,12 @@ import java.io.*;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-/**
- * Genera un PDF con el resumen de una venta usando iText (si disponible)
- * o un fallback en texto plano con extensión .pdf para entornos sin iText.
- *
- * NOTA: Para activar la generación real de PDF, añade itext-core al classpath.
- * El JAR de iText 5 (itextpdf-5.x.x.jar) es suficiente.
- * Si no está disponible, se genera un fichero de texto con los datos de la venta.
- */
 public class PDFUtils {
 
     private static final String PDF_TEMP_DIR = "temp";
     private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    /**
-     * Genera un fichero PDF (o texto) con el resumen de la venta y lo devuelve.
-     * @return File apuntando al PDF generado, o null si hubo error.
-     */
+     // Genera un fichero PDF con el resumen de la venta y lo devuelve.
     public static File generarResumenVenta(Usuario vendedor, Usuario comprador, Producto producto, int idTrato) {
         try {
             Files.createDirectories(Paths.get(PDF_TEMP_DIR));

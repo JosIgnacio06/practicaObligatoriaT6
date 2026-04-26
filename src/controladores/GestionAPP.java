@@ -11,18 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 
-/**
- * Controlador principal de Fernanpop. Contiene toda la lógica de negocio.
- *
- * Sigue el patrón MVC:
- *  - No lee entrada del usuario (sin Scanner).
- *  - No muestra menús ni imprime en pantalla (eso lo hace Main).
- *  - Coordina los modelos (Usuario, Producto, Trato) y las utilidades.
- *  - Devuelve datos o booleanos a la Vista para que esta decida qué mostrar.
- *
- * Persistencia: los datos se cargan al arrancar desde el fichero indicado
- * en AppConfig y se graban automáticamente tras cada modificación.
- */
+//Controlador principal de Fernanpop. Contiene toda la lógica de negocio.
 public class GestionAPP {
 
     private ArrayList<Usuario> usuarios;
@@ -32,7 +21,7 @@ public class GestionAPP {
         this.usuarios = PersistenciaUtils.cargar(AppConfig.getRutaDatos());
     }
 
-    /** Constructor alternativo para tests (sin persistencia). */
+    // Constructor alternativo para tests (sin persistencia).
     public GestionAPP(ArrayList<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
@@ -52,10 +41,8 @@ public class GestionAPP {
     // GESTIÓN DE USUARIOS
     // -------------------------------------------------------------------------
 
-    /**
-     * Crea y registra un nuevo usuario.
-     * @return el Usuario creado, o null si el email ya está registrado.
-     */
+    //Crea y registra un nuevo usuario.
+
     public Usuario crearUsuario(String nombre, String apellidos, String email, long movil, String clave) {
         if (buscaMail(email) != null) return null;
 
@@ -68,10 +55,8 @@ public class GestionAPP {
         return nuevo;
     }
 
-    /**
-     * Genera un código de verificación y lo envía por email al nuevo usuario.
-     * @return el código generado, o null si el envío falló.
-     */
+    //Genera un código de verificación y lo envía por email al nuevo usuario.
+
     public String generarYEnviarCodigoVerificacion(String nombre, String apellidos, String email) {
         String codigo = generarClave();
         String asunto = "Validación de correo electrónico || Fernanpop.";
@@ -86,10 +71,8 @@ public class GestionAPP {
         return enviado ? codigo : null;
     }
 
-    /**
-     * Envía notificaciones de venta por texto a vendedor y comprador.
-     * @return true si ambos emails se enviaron correctamente.
-     */
+    //Envía notificaciones de venta por texto a vendedor y comprador.
+
     public boolean enviarNotificacionesVenta(Usuario vendedor, Usuario comprador, Producto p) {
         String asuntoVendedor = "Venta realizada con éxito: " + p.getTitulo();
         String cuerpoVendedor = "Hola " + vendedor.getNombre() + ",\n\n" +
@@ -107,10 +90,9 @@ public class GestionAPP {
         return okV && okC;
     }
 
-    /**
-     * Genera y envía por email el PDF de resumen de venta al comprador.
-     * @return true si se generó y envió correctamente.
-     */
+    //Genera y envía por email el PDF de resumen de venta al comprador.
+
+
     public boolean enviarResumenVentaPDF(Usuario vendedor, Usuario comprador,
                                          Producto producto, int idTrato) {
         File pdf = PDFUtils.generarResumenVenta(vendedor, comprador, producto, idTrato);
@@ -123,10 +105,8 @@ public class GestionAPP {
         return EmailUtils.enviarEmailConPDF(comprador.getEmail(), asunto, cuerpo, pdf);
     }
 
-    /**
-     * Valida credenciales. Si son correctas, registra el log y actualiza el properties.
-     * @return el Usuario autenticado, o null si las credenciales son incorrectas.
-     */
+    //Valida credenciales. Si son correctas, registra el log y actualiza el properties.
+
     public Usuario login(String email, String clave) {
         for (Usuario user : usuarios) {
             if (user.getEmail().equalsIgnoreCase(email.trim())
@@ -139,15 +119,13 @@ public class GestionAPP {
         return null;
     }
 
-    /** Registra el cierre de sesión en el log. */
+    // Registra el cierre de sesión en el log.
     public void logout(String email) {
         LogUtils.logCierreSesion(email);
     }
 
-    /**
-     * Elimina el usuario de la lista y persiste.
-     * @return true si existía y fue eliminado.
-     */
+    //Elimina el usuario de la lista y persiste.
+
     public boolean borrarUsuario(Usuario u) {
         if (u == null) return false;
         boolean eliminado = usuarios.remove(u);
@@ -155,7 +133,7 @@ public class GestionAPP {
         return eliminado;
     }
 
-    /** Busca un usuario por email (insensible a mayúsculas). */
+    // Busca un usuario por email (insensible a mayúsculas).
     public Usuario buscaMail(String email) {
         for (Usuario u : usuarios) {
             if (u.getEmail().equalsIgnoreCase(email)) return u;
@@ -167,7 +145,7 @@ public class GestionAPP {
     // GESTIÓN DE PRODUCTOS
     // -------------------------------------------------------------------------
 
-    /** Devuelve todos los productos de todos los usuarios, ordenados por precio. */
+    // Devuelve todos los productos de todos los usuarios, ordenados por precio.
     public ArrayList<Producto> getAllProductos() {
         ArrayList<Producto> todos = new ArrayList<>();
         for (Usuario u : usuarios) todos.addAll(u.getEnVenta());
@@ -193,7 +171,7 @@ public class GestionAPP {
         return total;
     }
 
-    /** Busca productos cuyo título o descripción contengan el texto indicado. */
+    // Busca productos cuyo título o descripción contengan el texto indicado.
     public ArrayList<Producto> buscaProductosTexto(String textoBusqueda) {
         ArrayList<Producto> encontrados = new ArrayList<>();
         String busquedaMinus = textoBusqueda.toLowerCase();
@@ -206,10 +184,8 @@ public class GestionAPP {
         return encontrados;
     }
 
-    /**
-     * Comprueba que el producto con ese ID exista y pertenezca al usuario.
-     * @return el Producto si es válido y propio, null en caso contrario.
-     */
+    //Comprueba que el producto con ese ID exista y pertenezca al usuario.
+
     public Producto validarProductoPropio(long id, Usuario user) {
         Producto p = buscaProductoID(id);
         if (p == null) return null;
@@ -219,7 +195,7 @@ public class GestionAPP {
         return null;
     }
 
-    /** Genera un ID de producto aleatorio de 7 dígitos que no esté en uso. */
+    //Genera un ID de producto aleatorio de 7 dígitos que no esté en uso.
     public long generarIdProductoUnico() {
         long nuevoId;
         do { nuevoId = (long) (Math.random() * 9000000) + 1000000; }
@@ -227,7 +203,7 @@ public class GestionAPP {
         return nuevoId;
     }
 
-    /** Añade el producto al usuario, registra en log y persiste. */
+    //Añade el producto al usuario, registra en log y persiste.
     public boolean publicarProducto(Usuario user, Producto p) {
         boolean ok = user.addProducto(p);
         if (ok) {
@@ -241,11 +217,7 @@ public class GestionAPP {
     // GESTIÓN DE TRATOS
     // -------------------------------------------------------------------------
 
-    /**
-     * Registra una venta: crea los tratos en vendedor y comprador,
-     * quita el producto de enVenta y persiste.
-     * @return ID del trato generado, o -1 si algún parámetro es null.
-     */
+    //Registra una venta: crea los tratos en vendedor y comprador
     public int registrarVenta(Usuario vendedor, Usuario comprador, Producto producto) {
         if (vendedor == null || comprador == null || producto == null) return -1;
 
@@ -263,7 +235,7 @@ public class GestionAPP {
         return idTrato;
     }
 
-    /** Genera un ID de trato aleatorio de 6 dígitos que no esté en uso. */
+    //Genera un ID de trato aleatorio de 6 dígitos que no esté en uso.
     public int generarIdTratoUnico() {
         int nuevoId;
         do { nuevoId = (int) (Math.random() * 900000) + 100000; }
@@ -271,7 +243,7 @@ public class GestionAPP {
         return nuevoId;
     }
 
-    /** Busca un trato por ID en ventas y compras de todos los usuarios. */
+    //Busca un trato por ID en ventas y compras de todos los usuarios.
     public Trato buscaTratoID(int idBuscado) {
         for (Usuario u : usuarios) {
             for (Trato t : u.getVentas()) if (t.getId() == idBuscado) return t;
@@ -287,7 +259,7 @@ public class GestionAPP {
         return null;
     }
 
-    /** Busca una compra pendiente de valorar (puntuacion == 0) del usuario dado. */
+    //Busca una compra pendiente de valorar (puntuacion == 0) del usuario dado.
     public Trato buscaCompraPorId(Usuario user, int idBuscado) {
         for (Trato t : user.getCompras()) {
             if (t.getId() == idBuscado && t.getPuntuacion() == 0) return t;
@@ -299,7 +271,7 @@ public class GestionAPP {
     // GESTIÓN DE VALORACIONES
     // -------------------------------------------------------------------------
 
-    /** Devuelve las compras pendientes de valorar del usuario, ordenadas por fecha. */
+    //Devuelve las compras pendientes de valorar del usuario, ordenadas por fecha.
     public ArrayList<Trato> getValoracionesPendientes(Usuario user) {
         ArrayList<Trato> pendientes = new ArrayList<>();
         for (Trato t : user.getCompras()) {
@@ -309,10 +281,7 @@ public class GestionAPP {
         return pendientes;
     }
 
-    /**
-     * Registra la valoración en el trato del comprador y en el trato del vendedor.
-     * @return true si se encontró el trato y se registró correctamente.
-     */
+    //Registra la valoración en el trato del comprador y en el trato del vendedor.
     public boolean registrarValoracion(Usuario comprador, int idTrato, int puntuacion, String comentario) {
         Trato tratoComprador = buscaCompraPorId(comprador, idTrato);
         if (tratoComprador == null) return false;
@@ -339,10 +308,7 @@ public class GestionAPP {
     // MÉTODOS AUXILIARES
     // -------------------------------------------------------------------------
 
-    /**
-     * Calcula la nota media del usuario a partir de sus ventas valoradas.
-     * @return la media, o -1.0 si no tiene ninguna valoración.
-     */
+    //Calcula la nota media del usuario a partir de sus ventas valoradas.
     public double notaMedia(Usuario user) {
         int suma = 0, count = 0;
         for (Trato t : user.getVentas()) {
@@ -360,7 +326,7 @@ public class GestionAPP {
         return false;
     }
 
-    /** Genera una clave aleatoria de 15 caracteres (letras, dígitos y símbolos). */
+    //Genera una clave aleatoria de 15 caracteres (letras, dígitos y símbolos).
     public static String generarClave() {
         String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*?-";
         StringBuilder clave = new StringBuilder();
@@ -373,7 +339,7 @@ public class GestionAPP {
     // FUNCIONES DE ADMINISTRADOR
     // -------------------------------------------------------------------------
 
-    /** Devuelve el contenido del fichero de log como String. */
+    //Devuelve el contenido del fichero de log como String.
     public String getContenidoLog() {
         try {
             File logFile = new File("logs" + File.separator + "fernanpop.log");
@@ -384,10 +350,7 @@ public class GestionAPP {
         }
     }
 
-    /**
-     * Genera el fichero Excel con todos los productos y lo envía por email al admin.
-     * @return true si se generó y envió correctamente.
-     */
+    //Genera el fichero Excel con todos los productos y lo envía por email al admin.
     public boolean enviarListadoProductosPorEmail(String emailAdmin) {
         ArrayList<Producto> todos = getAllProductos();
         File excel = ExcelUtils.generarListadoProductos(todos);
@@ -398,10 +361,7 @@ public class GestionAPP {
         return EmailUtils.enviarEmailConExcel(emailAdmin, asunto, cuerpo, excel);
     }
 
-    /**
-     * Copia el fichero de datos en la ruta indicada con timestamp en el nombre.
-     * @return true si la copia se realizó correctamente.
-     */
+    //Copia el fichero de datos en la ruta indicada con timestamp en el nombre.
     public boolean realizarBackup(String rutaDestino) {
         try {
             Path origen = Paths.get(AppConfig.getRutaDatos());
@@ -428,10 +388,7 @@ public class GestionAPP {
     // DATOS DE PRUEBA
     // -------------------------------------------------------------------------
 
-    /**
-     * Inserta usuarios y productos de prueba. Solo actúa si la lista está vacía
-     * (es decir, en la primera ejecución sin datos persistidos).
-     */
+    //Inserta usuarios y productos de prueba. Solo actúa si la lista está vacía
     public void insercionDatos() {
         if (!usuarios.isEmpty()) return;
 

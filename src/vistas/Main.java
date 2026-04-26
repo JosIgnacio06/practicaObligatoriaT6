@@ -92,15 +92,8 @@ public class Main {
             return false;
         }
 
-        // FIX: Mensaje de última sesión desde properties
+        //Mensaje de última sesión desde properties
         String ultimaSesion = AppConfig.getUltimaSesion(email);
-        /* La fecha actual ya fue guardada en app.login(), así que leemos ANTES de actualizar.
-        El login actualiza la fecha, pero guardamos la anterior al inicio del metodo.
-        Como AppConfig.setUltimaSesion() se llama dentro de app.login(), recuperamos
-        la anterior cargando las props antes del login → se hace en app.login() con orden correcto.
-        Aquí simplemente mostramos lo que había antes del login (guardado en login()).
-        Para mostrar la sesión ANTERIOR hay que leerla ANTES del login. Ver nota abajo.
-         [Solución: el controlador devuelve la fecha anterior; aquí usamos el campo guardado] */
         if (ultimaSesion != null) {
             System.out.println("\n  > Usted inició sesión por última vez el " + ultimaSesion);
         } else {
@@ -233,7 +226,7 @@ public class Main {
             if (!comprobarClave) System.out.println("Las claves no coinciden. Inténtalo de nuevo.");
         } while (!comprobarClave);
 
-        // FIX: Verificación de email con manejo de fallo de envío
+        // Verificación de email con manejo de fallo de envío
         // Si el email no existe o el servidor rechaza el correo, no quedamos en bucle infinito.
         System.out.println("\nVamos a verificar tu correo electrónico...");
         if (!verificarEmail(nombre, apellidos, email)) {
@@ -251,12 +244,6 @@ public class Main {
         Utils.pulsaContinuar(s);
     }
 
-    /**
-     * FIX #1: Verificación de email con límite de intentos y opción de cancelar.
-     * El bucle original era infinito si el email no existía (fallo de envío).
-     *
-     * @return true si el usuario verificó el código correctamente; false si canceló.
-     */
     private static boolean verificarEmail(String nombre, String apellidos, String email) {
         final int MAX_INTENTOS = 3;
         int intentos = 0;
@@ -844,11 +831,6 @@ public class Main {
         }
     }
 
-    /**
-     * FIX #7: pintarMenuLog ya no tiene bucle interno propio (se elimina el do-while interior
-     * que podía quedar atrapado). La validación del rango se hace aquí una sola vez;
-     * el do-while está en menuUsuario().
-     */
     private static int pintarMenuLog(Usuario user) {
         int numVal = (user.getValoracionesPendientes() != null)
                 ? user.getValoracionesPendientes().size() : 0;

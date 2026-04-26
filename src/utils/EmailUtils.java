@@ -10,16 +10,13 @@ import javax.activation.*;
 import java.io.File;
 import java.util.Properties;
 
-// UTILIDAD: Gestión del envío de emails.
+//Gestión del envío de emails.
 // Devuelve boolean para que la capa que llame decida qué mostrar al usuario.
 public class EmailUtils {
     private static final String REMITENTE = "nachescalpro@gmail.com";
     private static final String CLAVE     = "ysep wwzd ygkk gafx";
 
-    /**
-     * Envía un email de texto plano.
-     * @return true si el envío fue correcto, false si hubo algún error.
-     */
+
     public static boolean enviarEmail(String destinatario, String asunto, String cuerpo) {
         try {
             Session session = crearSession();
@@ -39,10 +36,6 @@ public class EmailUtils {
         }
     }
 
-    /**
-     * Envía un email con un fichero PDF adjunto.
-     * @return true si el envío fue correcto.
-     */
     public static boolean enviarEmailConPDF(String destinatario, String asunto,
                                             String cuerpo, File adjuntoPDF) {
         try {
@@ -75,9 +68,8 @@ public class EmailUtils {
         }
     }
 
-    /**
-     * Envía un email con un fichero Excel adjunto.
-     */
+    // Envía un email con un fichero Excel adjunto.
+
     public static boolean enviarEmailConExcel(String destinatario, String asunto,
                                                String cuerpo, File adjuntoExcel) {
         return enviarEmailConPDF(destinatario, asunto, cuerpo, adjuntoExcel); // mismo mecanismo

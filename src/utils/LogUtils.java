@@ -4,12 +4,6 @@ import java.io.*;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-/**
- * Sistema de log de actividad de Fernanpop.
- * Cada entrada sigue el formato CSV indicado en el enunciado.
- * El fichero se guarda en logs/fernanpop.log (ruta relativa al directorio de ejecución).
- */
 public class LogUtils {
 
     // Ruta relativa: funciona tanto en desarrollo como en el .jar ejecutable

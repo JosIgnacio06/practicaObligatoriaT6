@@ -6,20 +6,10 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
 
-/**
- * Genera un fichero Excel (CSV compatible con Excel) con el listado de productos.
- *
- * Si Apache POI está disponible en el classpath se genera un .xlsx real.
- * En caso contrario se genera un .csv con separador punto y coma, que Excel abre directamente.
- */
+//Genera un fichero Excel (CSV compatible con Excel) con el listado de productos.
 public class ExcelUtils {
 
     private static final String TEMP_DIR = "temp";
-
-    /**
-     * Genera el fichero con todos los productos y lo devuelve.
-     * @return File apuntando al fichero, o null si hubo error.
-     */
     public static File generarListadoProductos(ArrayList<Producto> productos) {
         try {
             Files.createDirectories(Paths.get(TEMP_DIR));
@@ -34,10 +24,6 @@ public class ExcelUtils {
             return null;
         }
     }
-
-    // -------------------------------------------------------------------------
-    // CSV (siempre disponible, abre directamente en Excel)
-    // -------------------------------------------------------------------------
     private static File generarCSV(ArrayList<Producto> productos) throws IOException {
         File fichero = new File(TEMP_DIR + File.separator + "productos_fernanpop.csv");
         try (BufferedWriter bw = new BufferedWriter(

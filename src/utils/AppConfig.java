@@ -6,14 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-/**
- * Gestiona el fichero de configuración fernanpop.properties.
- *
- * Claves gestionadas:
- *   data.file          → ruta del fichero de datos serializados
- *   acceso.invitado    → true/false (acceso sin login)
- *   ultima.sesion.<email> → fecha/hora del último login de cada usuario
- */
+//Gestiona el fichero de configuración fernanpop.properties.
 public class AppConfig {
 
     // Ruta relativa al directorio de ejecución
@@ -30,9 +23,8 @@ public class AppConfig {
     // Carga inicial
     // -------------------------------------------------------------------------
 
-    /**
-     * Carga el fichero de propiedades. Si no existe, crea uno con valores por defecto.
-     */
+    //Carga el fichero de propiedades. Si no existe, crea uno con valores por defecto.
+
     public static void cargar() {
         Path configPath = Paths.get(CONFIG_PATH);
         if (Files.exists(configPath)) {

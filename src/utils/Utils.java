@@ -2,7 +2,7 @@ package utils;
 
 import java.util.Scanner;
 
-// UTILIDAD: Métodos de apoyo para la interfaz de consola.
+//Métodos de apoyo para la interfaz de consola.
 public class Utils {
 
     public static void limpiarPantalla() {
