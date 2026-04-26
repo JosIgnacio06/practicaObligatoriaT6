@@ -23,6 +23,19 @@ public class Main {
     public static void main(String[] args) {
         app.insercionDatos(); // Solo inserta si no hay datos previos
 
+        // Credenciales MOK — visibles siempre al arrancar para facilitar pruebas
+        System.out.println("╔══════════════════════════════════════════════════╗");
+        System.out.println("║           USUARIOS DE PRUEBA (MOK)               ║");
+        System.out.println("╠══════════════════════════════════════════════════╣");
+        System.out.println("║  ana@fernanpop.com      │ Contraseña: 1234       ║");
+        System.out.println("║  luis@fernanpop.com     │ Contraseña: 1234       ║");
+        System.out.println("║  marta@fernanpop.com    │ Contraseña: 1234       ║");
+        System.out.println("║  admin@fernanpop.com    │ Contraseña: admin      ║");
+        System.out.println("║  carlos@fernanpop.com   │ Contraseña: 1234       ║");
+        System.out.println("║  laura@fernanpop.com    │ Contraseña: 1234       ║");
+        System.out.println("╚══════════════════════════════════════════════════╝");
+        System.out.println();
+
         boolean salir = false;
 
         do {
@@ -81,13 +94,13 @@ public class Main {
 
         // FIX: Mensaje de última sesión desde properties
         String ultimaSesion = AppConfig.getUltimaSesion(email);
-        // La fecha actual ya fue guardada en app.login(), así que leemos ANTES de actualizar.
-        // El login actualiza la fecha, pero guardamos la anterior al inicio del método.
-        // Como AppConfig.setUltimaSesion() se llama dentro de app.login(), recuperamos
-        // la anterior cargando las props antes del login → se hace en app.login() con orden correcto.
-        // Aquí simplemente mostramos lo que había antes del login (guardado en login()).
-        // Para mostrar la sesión ANTERIOR hay que leerla ANTES del login. Ver nota abajo.
-        // [Solución: el controlador devuelve la fecha anterior; aquí usamos el campo guardado]
+        /* La fecha actual ya fue guardada en app.login(), así que leemos ANTES de actualizar.
+        El login actualiza la fecha, pero guardamos la anterior al inicio del metodo.
+        Como AppConfig.setUltimaSesion() se llama dentro de app.login(), recuperamos
+        la anterior cargando las props antes del login → se hace en app.login() con orden correcto.
+        Aquí simplemente mostramos lo que había antes del login (guardado en login()).
+        Para mostrar la sesión ANTERIOR hay que leerla ANTES del login. Ver nota abajo.
+         [Solución: el controlador devuelve la fecha anterior; aquí usamos el campo guardado] */
         if (ultimaSesion != null) {
             System.out.println("\n  > Usted inició sesión por última vez el " + ultimaSesion);
         } else {
